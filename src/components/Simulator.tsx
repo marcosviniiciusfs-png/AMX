@@ -227,8 +227,8 @@ const Simulator = () => {
                 onClick={() => setFormData({ ...formData, limitedConditionsInterest: "Sim" })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   formData.limitedConditionsInterest === "Sim"
-                    ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
-                    : "border-border hover:border-brand-blue/50 text-muted-foreground"
+                    ? "border-black bg-black/5 text-black"
+                    : "border-border text-muted-foreground hover:border-black/50"
                 }`}
               >
                 <span className="text-base font-normal">Sim</span>
@@ -239,7 +239,7 @@ const Simulator = () => {
                 className={`p-4 rounded-xl border-2 transition-all ${
                   formData.limitedConditionsInterest === "Não"
                     ? "border-foreground bg-foreground/5 text-foreground"
-                    : "border-border hover:border-brand-blue/50 text-muted-foreground"
+                    : "border-border text-muted-foreground hover:border-black/50"
                 }`}
               >
                 <span className="text-base font-normal">Não</span>
@@ -299,8 +299,8 @@ const Simulator = () => {
                 onClick={() => setFormData({ ...formData, hasDownPayment: "Sim" })}
                 className={`p-4 rounded-xl border-2 transition-all ${
                   formData.hasDownPayment === "Sim"
-                    ? "border-brand-blue bg-brand-blue/5 text-brand-blue"
-                    : "border-border hover:border-brand-blue/50 text-muted-foreground"
+                    ? "border-black bg-black/5 text-black"
+                    : "border-border text-muted-foreground hover:border-black/50"
                 }`}
               >
                 <span className="text-base font-normal">Sim</span>
@@ -311,7 +311,7 @@ const Simulator = () => {
                 className={`p-4 rounded-xl border-2 transition-all ${
                   formData.hasDownPayment === "Não"
                     ? "border-foreground bg-foreground/5 text-foreground"
-                    : "border-border hover:border-brand-blue/50 text-muted-foreground"
+                    : "border-border text-muted-foreground hover:border-black/50"
                 }`}
               >
                 <span className="text-base font-normal">Não</span>
@@ -424,7 +424,7 @@ const Simulator = () => {
             </p>
           </div>
 
-          <div className="bg-card rounded-2xl border border-brand-blue/10 shadow-lg p-6 md:p-8 space-y-6">
+          <div className="space-y-6 rounded-2xl border border-black/10 bg-card p-6 shadow-lg md:p-8">
             <div className="space-y-2">
               <div className="flex justify-between text-sm text-muted-foreground">
                 <span>Progresso</span>
@@ -452,7 +452,7 @@ const Simulator = () => {
                 <Button
                   onClick={handleNext}
                   disabled={!canProceed()}
-                  className="flex items-center gap-2 bg-brand-blue hover:bg-brand-blue-hover"
+                  className="flex items-center gap-2 bg-black text-white hover:bg-black/80"
                 >
                   Próximo
                   <ChevronRight className="w-4 h-4" />
@@ -461,7 +461,7 @@ const Simulator = () => {
                 <Button
                   onClick={handleFinish}
                   disabled={!canProceed() || isSubmitting}
-                  className="bg-brand-blue hover:bg-brand-blue-hover"
+                  className="bg-black text-white hover:bg-black/80"
                 >
                   {isSubmitting ? "Enviando..." : "Finalizar Simulação"}
                 </Button>

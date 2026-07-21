@@ -27,21 +27,21 @@ All colors MUST be HSL.
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 45 58% 90%;
+    --accent: 0 0% 94%;
     --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 0% 0%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 90%;
     --input: 0 0% 90%;
-    --ring: 222 85% 28%;
+    --ring: 0 0% 0%;
 
     --radius: 0.75rem;
     
     --gradient-primary: linear-gradient(135deg, hsl(0 0% 0%), hsl(0 0% 10%));
     --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 4px 16px rgba(15, 58, 140, 0.2);
+    --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.2);
 
     --sidebar-background: 0 0% 98%;
 
@@ -51,7 +51,7 @@ All colors MUST be HSL.
 
     --sidebar-primary-foreground: 0 0% 98%;
 
-    --sidebar-accent: 45 58% 90%;
+    --sidebar-accent: 0 0% 94%;
 
     --sidebar-accent-foreground: 0 0% 0%;
 
@@ -59,11 +59,11 @@ All colors MUST be HSL.
 
     --sidebar-ring: 0 0% 0%;
     
-    --header-footer: 0 0% 0%;
-    --orange: 45 68% 49%;
-    --brand-blue: 222 85% 28%;
-    --brand-blue-hover: 222 88% 22%;
-    --brand-blue-soft: 218 72% 94%;
+    --header-footer: 0 0% 100%;
+    --orange: 0 0% 0%;
+    --brand-blue: 0 0% 0%;
+    --brand-blue-hover: 0 0% 12%;
+    --brand-blue-soft: 0 0% 96%;
   }
 
   .dark {
@@ -86,26 +86,26 @@ All colors MUST be HSL.
     --muted: 0 0% 20%;
     --muted-foreground: 0 0% 60%;
 
-    --accent: 45 58% 28%;
+    --accent: 0 0% 28%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 62.8% 50%;
+    --destructive: 0 0% 65%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 0 0% 25%;
     --input: 0 0% 25%;
-    --ring: 222 85% 58%;
+    --ring: 0 0% 80%;
     --sidebar-background: 0 0% 10%;
     --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 0 0% 0%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 45 58% 28%;
+    --sidebar-accent: 0 0% 28%;
     --sidebar-accent-foreground: 0 0% 95%;
     --sidebar-border: 0 0% 25%;
-    --sidebar-ring: 45 68% 49%;
-    --brand-blue: 222 85% 58%;
-    --brand-blue-hover: 222 88% 48%;
-    --brand-blue-soft: 222 44% 18%;
+    --sidebar-ring: 0 0% 80%;
+    --brand-blue: 0 0% 95%;
+    --brand-blue-hover: 0 0% 85%;
+    --brand-blue-soft: 0 0% 18%;
   }
 }
 

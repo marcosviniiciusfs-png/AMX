@@ -13,6 +13,7 @@ dist-ssr
 *.local
 
 # Local source assets kept out of deploy commits
+Logo amx.png
 Nova logo/
 Nova Logo/
 Clientes contemplados/

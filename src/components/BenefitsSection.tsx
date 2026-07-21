@@ -30,7 +30,7 @@ const BenefitsSection = () => {
   ];
 
   return (
-    <section id="beneficios" className="py-16 bg-secondary/30">
+    <section id="beneficios" className="bg-secondary/30 py-16">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
@@ -45,11 +45,11 @@ const BenefitsSection = () => {
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="bg-card rounded-xl border border-border p-8 shadow-md hover:border-brand-blue/30 hover:shadow-xl transition-all hover:-translate-y-1 animate-fade-in"
+              className="animate-fade-in rounded-xl border border-black/10 bg-card p-8 shadow-md transition-all hover:-translate-y-1 hover:border-black/40 hover:shadow-xl"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
-              <div className="w-16 h-16 rounded-full bg-orange/10 flex items-center justify-center mb-6 mx-auto">
-                <benefit.icon className="w-8 h-8 text-orange" />
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-black">
+                <benefit.icon className="h-8 w-8 text-white" />
               </div>
               <h3 className="text-xl font-bold text-foreground mb-3 text-center">
                 {benefit.title}
@@ -75,13 +75,13 @@ const BenefitsSection = () => {
             {partnerBanks.map((bank) => (
               <div
                 key={bank.name}
-                className="min-h-[150px] rounded-lg border border-brand-blue/15 bg-background p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-brand-blue/40 hover:shadow-lg"
+                className="min-h-[150px] rounded-lg border border-black/10 bg-background p-5 shadow-sm transition-all hover:-translate-y-1 hover:border-black/40 hover:shadow-lg"
               >
-                <div className="mx-auto mb-4 flex h-20 w-full items-center justify-center rounded-lg border border-orange/20 bg-white px-4 py-3">
+                <div className="mx-auto mb-4 flex h-20 w-full items-center justify-center rounded-lg border border-black/10 bg-white px-4 py-3">
                   <img
                     src={bank.logo}
                     alt={`Logo ${bank.name}`}
-                    className="h-full max-h-16 w-full object-contain"
+                    className="h-full max-h-16 w-full object-contain grayscale"
                   />
                 </div>
                 <p className="text-center text-lg font-semibold text-foreground">
