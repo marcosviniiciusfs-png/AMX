@@ -24,7 +24,7 @@ const HeroSection = ({ onSimulateClick }: HeroSectionProps) => {
             </h1>
             
             <p className="text-lg text-muted-foreground font-medium">
-              Informe seu objetivo e receba uma simulação personalizada pelo WhatsApp.
+              Atendimento em Manaus, Amazonas, com retorno pelo WhatsApp.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

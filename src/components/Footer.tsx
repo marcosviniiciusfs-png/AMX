@@ -1,5 +1,8 @@
-import { Clock, MessageCircle } from "lucide-react";
+import { Instagram, MapPin, MessageCircle } from "lucide-react";
 import amxLogo from "@/assets/logo-amx.png";
+
+const whatsappUrl = "https://wa.me/5592994293489";
+const instagramUrl = "https://www.instagram.com/amxrepresentacoesefinancas/";
 
 const Footer = () => {
   return (
@@ -15,32 +18,56 @@ const Footer = () => {
               />
             </div>
             <p className="max-w-xs text-center text-sm text-foreground/70 md:text-left">
-              Simulação de crédito para imóveis, veículos, motos, caminhões e maquinário.
+              AMX Representações e Finanças. Simulação de crédito com atendimento em Manaus, Amazonas.
             </p>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-4">Atendimento</h3>
+            <h3 className="text-xl font-bold mb-4">Fale conosco</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
                 <MessageCircle className="w-5 h-5 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold">Retorno pelo WhatsApp</p>
-                  <p className="text-foreground/70">Use o simulador para solicitar contato.</p>
+                  <p className="font-semibold">WhatsApp</p>
+                  <a
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                  >
+                    (92) 99429-3489
+                  </a>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <Instagram className="w-5 h-5 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold">Instagram</p>
+                  <a
+                    href={instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-foreground/70 underline-offset-4 transition-colors hover:text-foreground hover:underline"
+                    aria-label="Instagram da AMX Representações e Finanças"
+                  >
+                    @amxrepresentacoesefinancas
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xl font-bold mb-4">Próximos passos</h3>
+            <h3 className="text-xl font-bold mb-4">Localização</h3>
             <div className="space-y-3">
               <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 mt-1 flex-shrink-0" />
+                <MapPin className="w-5 h-5 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-semibold">Análise do cadastro</p>
+                  <p className="font-semibold">Manaus - AM</p>
                   <p className="text-foreground/70">
-                    Os dados enviados passam por avaliação para montagem da simulação.
+                    Av. Mário Ypiranga, nº 2535<br />
+                    Bairro Flores<br />
+                    CEP 69058-775
                   </p>
                 </div>
               </div>
