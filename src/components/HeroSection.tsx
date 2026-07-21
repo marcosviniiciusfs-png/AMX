@@ -51,7 +51,7 @@ const HeroSection = ({ onSimulateClick }: HeroSectionProps) => {
             <img 
               src={heroBanner} 
               alt="Imóveis e Veículos" 
-              className="h-auto w-full rounded-2xl border border-black/10 grayscale shadow-2xl"
+              className="h-auto w-full rounded-2xl border border-black/10 shadow-2xl"
             />
           </div>
         </div>

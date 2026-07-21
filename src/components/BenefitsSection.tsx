@@ -81,7 +81,7 @@ const BenefitsSection = () => {
                   <img
                     src={bank.logo}
                     alt={`Logo ${bank.name}`}
-                    className="h-full max-h-16 w-full object-contain grayscale"
+                    className="h-full max-h-16 w-full object-contain"
                   />
                 </div>
                 <p className="text-center text-lg font-semibold text-foreground">
