@@ -18,8 +18,8 @@ const Index = () => {
       <Header />
       <main>
         <HeroSection onSimulateClick={scrollToSimulator} />
-        <Simulator />
         <BenefitsSection />
+        <Simulator />
         <ClientsShowcaseSection />
       </main>
       <Footer />
