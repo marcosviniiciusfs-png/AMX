@@ -113,8 +113,11 @@ export const sendLeadWebhook = async (
 
   if (!FORM_WEBHOOK_PROXY_URL) {
     return {
-      success: false,
-      error: "Webhook de leads não configurado.",
+      success: true,
+      status: 204,
+      data: {
+        delivery: "disabled",
+      },
     };
   }
 
