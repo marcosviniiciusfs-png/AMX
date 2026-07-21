@@ -8,6 +8,9 @@ export default defineConfig(() => ({
   server: {
     host: "::",
     port: 8080,
+    watch: {
+      ignored: ["**/public/clientes-contemplados/**"],
+    },
   },
   plugins: [react()],
   resolve: {
