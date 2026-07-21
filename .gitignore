@@ -11,6 +11,13 @@ node_modules
 dist
 dist-ssr
 *.local
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+.wrangler
+.wrangler/
 
 # Local source assets kept out of deploy commits
 Logo amx.png

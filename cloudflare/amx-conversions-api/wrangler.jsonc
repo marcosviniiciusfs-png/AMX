@@ -1,0 +1,21 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "amx-conversions-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-21",
+  "workers_dev": true,
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "META_PIXEL_ID": "2032284170758655",
+    "META_GRAPH_API_VERSION": "v25.0",
+    "ALLOWED_ORIGINS": "https://amx.simulead.com.br,http://127.0.0.1:8080,http://localhost:8080"
+  },
+  "secrets": {
+    "required": [
+      "META_CAPI_ACCESS_TOKEN"
+    ]
+  }
+}
