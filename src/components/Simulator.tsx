@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import InputMask from "react-input-mask";
-import { sendLeadWebhook } from "@/services/leadWebhook";
 import { trackLead } from "@/services/metaConversions";
 import {
   Select,
@@ -159,12 +158,6 @@ const Simulator = () => {
     };
 
     try {
-      const leadWebhookResult = await sendLeadWebhook(leadData);
-
-      if (!leadWebhookResult.success) {
-        throw new Error(leadWebhookResult.error || "Erro ao enviar lead.");
-      }
-
       await trackLead(leadData);
 
       toast({

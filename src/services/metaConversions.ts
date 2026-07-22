@@ -15,6 +15,7 @@ type MetaEventPayload = {
   event_source_url: string;
   user_data?: BrowserUserData & Record<string, string | undefined>;
   custom_data?: Record<string, unknown>;
+  lead_data?: LeadWebhookData;
 };
 
 declare global {
@@ -78,8 +79,36 @@ const trackBrowserPixel = (
   window.fbq("track", eventName, parameters, { eventID: eventId });
 };
 
-const sendServerEvent = async (payload: MetaEventPayload) => {
-  if (!META_CAPI_URL) return;
+const readResponseBody = async (response: Response) => {
+  const text = await response.text();
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
+};
+
+const extractErrorMessage = (body: unknown, fallback: string) => {
+  if (typeof body === "string") return body;
+  if (body && typeof body === "object") {
+    if ("error" in body) return String(body.error);
+    if ("message" in body) return String(body.message);
+  }
+  return fallback;
+};
+
+const sendServerEvent = async (
+  payload: MetaEventPayload,
+  options: { requireSuccess?: boolean } = {}
+) => {
+  if (!META_CAPI_URL) {
+    if (options.requireSuccess) {
+      throw new Error("API de conversão da AMX não configurada.");
+    }
+    return;
+  }
 
   try {
     const response = await fetch(META_CAPI_URL, {
@@ -90,12 +119,26 @@ const sendServerEvent = async (payload: MetaEventPayload) => {
       body: JSON.stringify(payload),
       keepalive: true,
     });
+    const responseBody = await readResponseBody(response);
 
     if (!response.ok) {
       console.warn("Meta Conversions API retornou erro.", response.status);
+      if (options.requireSuccess) {
+        throw new Error(
+          extractErrorMessage(
+            responseBody,
+            `Erro HTTP ${response.status} ao registrar o lead.`
+          )
+        );
+      }
     }
   } catch (error) {
     console.warn("Falha ao enviar evento para Meta Conversions API.", error);
+    if (options.requireSuccess) {
+      throw error instanceof Error
+        ? error
+        : new Error("Falha ao registrar o lead.");
+    }
   }
 };
 
@@ -140,6 +183,7 @@ export const trackLead = async (leadData: LeadWebhookData) => {
     event_name: "Lead",
     event_id: eventId,
     event_source_url: eventSourceUrl,
+    lead_data: leadData,
     user_data: {
       ...getBrowserUserData(),
       ph: leadData.whatsapp,
@@ -157,5 +201,5 @@ export const trackLead = async (leadData: LeadWebhookData) => {
       limited_conditions_interest: leadData.limitedConditionsInterest,
       acquisition_time: leadData.acquisitionTime,
     },
-  });
+  }, { requireSuccess: true });
 };

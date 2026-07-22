@@ -4,10 +4,11 @@ Worker separado da AMX para receber eventos do site e encaminhar para a Meta Con
 
 ## Configuracao
 
-As configuracoes publicas ficam em `wrangler.jsonc`. O token da Meta deve ser salvo somente como secret do Cloudflare:
+As configuracoes publicas ficam em `wrangler.jsonc`. O token da Meta e o webhook de destino devem ser salvos somente como secrets do Cloudflare:
 
 ```bash
 npm run worker:amx:secret
+wrangler secret put LEAD_DESTINATION_WEBHOOK_URL --config cloudflare/amx-conversions-api/wrangler.jsonc
 ```
 
 ## Deploy

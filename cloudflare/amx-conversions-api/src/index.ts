@@ -25,6 +25,7 @@ type ClientEventPayload = {
   event_source_url?: string;
   user_data?: Record<string, ClientUserDataValue | null | undefined>;
   custom_data?: Record<string, unknown>;
+  lead_data?: LeadData;
 };
 
 type MetaUserData = Record<string, string | string[]>;
@@ -37,6 +38,25 @@ type MetaServerEvent = {
   event_id?: string;
   user_data: MetaUserData;
   custom_data?: Record<string, unknown>;
+};
+
+type LeadData = {
+  fullName: string;
+  whatsapp: string;
+  creditAmount: string;
+  limitedConditionsInterest: string;
+  hasDownPayment: string;
+  downPaymentAmount: string;
+  monthlyPayment: string;
+  city: string;
+  acquisitionTime: string;
+  propertyType: string;
+};
+
+type DeliveryResult = {
+  ok: boolean;
+  status: number;
+  body: unknown;
 };
 
 class HttpError extends Error {
@@ -120,6 +140,43 @@ const readLimitedText = async (request: Request) => {
   }
 
   return new TextDecoder().decode(body);
+};
+
+const readLimitedResponseBody = async (response: Response) => {
+  if (!response.body) return null;
+
+  const reader = response.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let received = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    if (!value) continue;
+
+    received += value.byteLength;
+    if (received > MAX_BODY_BYTES) {
+      await reader.cancel();
+      return "Resposta truncada por limite de tamanho.";
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(received);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+
+  const text = new TextDecoder().decode(body);
+  if (!text) return null;
+
+  try {
+    return JSON.parse(text);
+  } catch {
+    return text;
+  }
 };
 
 const parseJsonPayload = async (request: Request): Promise<ClientEventPayload> => {
@@ -259,18 +316,10 @@ const buildMetaEvent = async (
   };
 };
 
-const readMetaResponse = async (response: Response) => {
-  const text = await response.text();
-  if (!text) return null;
-
-  try {
-    return JSON.parse(text);
-  } catch {
-    return text;
-  }
-};
-
-const sendToMeta = async (env: Env, event: MetaServerEvent) => {
+const sendToMeta = async (
+  env: Env,
+  event: MetaServerEvent
+): Promise<DeliveryResult> => {
   if (!env.META_CAPI_ACCESS_TOKEN) {
     throw new HttpError(500, "Token da Conversions API nao configurado.");
   }
@@ -294,7 +343,113 @@ const sendToMeta = async (env: Env, event: MetaServerEvent) => {
   return {
     ok: response.ok,
     status: response.status,
-    body: await readMetaResponse(response),
+    body: await readLimitedResponseBody(response),
+  };
+};
+
+const parseCurrencyNumber = (value: string) => {
+  const numbers = value.replace(/\D/g, "");
+  return numbers ? Number(numbers) / 100 : null;
+};
+
+const validateLeadData = (data: LeadData) => {
+  const requiredFields: Array<keyof LeadData> = [
+    "fullName",
+    "whatsapp",
+    "creditAmount",
+    "limitedConditionsInterest",
+    "hasDownPayment",
+    "monthlyPayment",
+    "city",
+    "acquisitionTime",
+    "propertyType",
+  ];
+
+  for (const field of requiredFields) {
+    const value = data[field];
+    if (typeof value !== "string" || !value.trim()) {
+      throw new HttpError(400, `Campo de lead ausente: ${field}.`);
+    }
+  }
+
+  if (
+    data.hasDownPayment === "Sim" &&
+    (typeof data.downPaymentAmount !== "string" || !data.downPaymentAmount.trim())
+  ) {
+    throw new HttpError(400, "Campo de lead ausente: downPaymentAmount.");
+  }
+
+  if (data.whatsapp.replace(/\D/g, "").length < 10) {
+    throw new HttpError(400, "WhatsApp do lead invalido.");
+  }
+};
+
+const buildLeadDestinationPayload = (
+  request: Request,
+  env: Env,
+  payload: ClientEventPayload
+) => {
+  const data = payload.lead_data;
+  if (!data) {
+    throw new HttpError(400, "Dados do lead ausentes.");
+  }
+  validateLeadData(data);
+
+  const telefone = data.whatsapp.replace(/\D/g, "");
+  const valorEntrada =
+    data.hasDownPayment === "Sim" ? data.downPaymentAmount : "Não tem";
+  const receivedAt = new Date();
+
+  return {
+    nome: data.fullName.trim(),
+    telefone,
+    whatsapp: data.whatsapp,
+    tipo: "AMX_SIMULADOR",
+    tipo_bem: data.propertyType,
+    interesse_condicoes_limitadas: data.limitedConditionsInterest,
+    valor_pretendido: data.creditAmount,
+    valor_pretendido_numero: parseCurrencyNumber(data.creditAmount),
+    possui_entrada: data.hasDownPayment,
+    valor_entrada: valorEntrada,
+    valor_entrada_numero:
+      data.hasDownPayment === "Sim" ? parseCurrencyNumber(data.downPaymentAmount) : null,
+    parcela_ideal: data.monthlyPayment,
+    parcela_ideal_numero: parseCurrencyNumber(data.monthlyPayment),
+    cidade: data.city.trim(),
+    tempo_aquisicao: data.acquisitionTime,
+    origem: "simulador_amx",
+    data_entrada: receivedAt.toISOString().split("T")[0],
+    received_at: receivedAt.toISOString(),
+    source_url:
+      payload.event_source_url || request.headers.get("Referer") || "",
+    user_agent: request.headers.get("User-Agent") || "",
+    event_id: payload.event_id,
+    meta_pixel_id: env.META_PIXEL_ID,
+    delivery_source: "amx_conversions_api_worker",
+  };
+};
+
+const sendLeadDestinationWebhook = async (
+  request: Request,
+  env: Env,
+  payload: ClientEventPayload
+): Promise<DeliveryResult> => {
+  if (!env.LEAD_DESTINATION_WEBHOOK_URL) {
+    throw new HttpError(500, "Webhook de destino nao configurado.");
+  }
+
+  const response = await fetch(env.LEAD_DESTINATION_WEBHOOK_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(buildLeadDestinationPayload(request, env, payload)),
+  });
+
+  return {
+    ok: response.ok,
+    status: response.status,
+    body: await readLimitedResponseBody(response),
   };
 };
 
@@ -326,15 +481,52 @@ export default {
     try {
       const payload = await parseJsonPayload(request);
       const event = await buildMetaEvent(request, payload);
-      const metaResult = await sendToMeta(env, event);
+      const leadWebhookResult =
+        payload.event_name === "Lead"
+          ? await sendLeadDestinationWebhook(request, env, payload)
+          : null;
+      let metaResult: DeliveryResult;
+
+      try {
+        metaResult = await sendToMeta(env, event);
+      } catch (error) {
+        metaResult = {
+          ok: false,
+          status: 0,
+          body: {
+            error:
+              error instanceof Error
+                ? error.message
+                : "Falha ao enviar evento para a Meta.",
+          },
+        };
+      }
+
+      const leadDeliveryFailed =
+        Boolean(leadWebhookResult) && !leadWebhookResult?.ok;
+      const responseStatus = leadDeliveryFailed
+        ? 502
+        : payload.event_name === "Lead" || metaResult.ok
+          ? 200
+          : 502;
 
       return jsonResponse(
         {
-          success: metaResult.ok,
-          status: metaResult.status,
-          meta: metaResult.body,
+          success: !leadDeliveryFailed && (payload.event_name === "Lead" || metaResult.ok),
+          lead_webhook: leadWebhookResult
+            ? {
+                success: leadWebhookResult.ok,
+                status: leadWebhookResult.status,
+                response: leadWebhookResult.body,
+              }
+            : undefined,
+          meta: {
+            success: metaResult.ok,
+            status: metaResult.status,
+            response: metaResult.body,
+          },
         },
-        metaResult.ok ? 200 : 502,
+        responseStatus,
         corsHeaders
       );
     } catch (error) {

@@ -11,11 +11,12 @@
   "vars": {
     "META_PIXEL_ID": "2032284170758655",
     "META_GRAPH_API_VERSION": "v25.0",
-    "ALLOWED_ORIGINS": "https://amx.simulead.com.br,http://127.0.0.1:8080,http://localhost:8080"
+    "ALLOWED_ORIGINS": "https://amx.simulead.com.br,http://127.0.0.1:8080,http://localhost:8080,http://127.0.0.1:8081,http://localhost:8081"
   },
   "secrets": {
     "required": [
-      "META_CAPI_ACCESS_TOKEN"
+      "META_CAPI_ACCESS_TOKEN",
+      "LEAD_DESTINATION_WEBHOOK_URL"
     ]
   }
 }
