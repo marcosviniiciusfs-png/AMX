@@ -1,6 +1,6 @@
 import { ArrowRight, MapPin, MessagesSquare, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import heroConsultoria from "@/assets/hero-amx-consultoria.png";
+import heroConsultoria from "@/assets/hero-amx-consultoria.webp";
 
 interface HeroSectionProps {
   onSimulateClick: () => void;
